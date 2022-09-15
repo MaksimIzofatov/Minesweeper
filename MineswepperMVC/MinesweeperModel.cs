@@ -8,34 +8,35 @@ namespace MineswepperMVC
 {
     public class MinesweeperModel
     {
-        int rowCount = 10;
-        int colCount = 10;
-        int mineCount = 15;
+        private int _rowCount = 10;
+        private int _colCount = 10;
+        private int _mineCount = 15;
 
-        MinesweeperCell[,] cells;
+        private MinesweeperCell[,] _cells;
+        private Random _r = new Random();
 
-        bool firstStep;
-        bool gameOver;
+        private bool _firstStep;
+        private bool _gameOver;
 
-        public int RowCount => rowCount;
-        public int ColumnCount => colCount;
+        public int RowCount => _rowCount;
+        public int ColumnCount => _colCount;
 
-        Random random = new Random();
+       
         public MinesweeperModel()
         {
-            cells = new MinesweeperCell[rowCount, colCount];
+            _cells = new MinesweeperCell[_rowCount, _colCount];
             StartGame();
         }
 
         public void StartGame()
         {
-            firstStep = true;
-            gameOver = false;
-            for (int i = 0; i < rowCount; i++)
+            _firstStep = true;
+            _gameOver = false;
+            for (int i = 0; i < _rowCount; i++)
             {
-                for (int j = 0; j < colCount; j++)
+                for (int j = 0; j < _colCount; j++)
                 {
-                    cells[i, j] = new MinesweeperCell { Row = i, Column = j };
+                    _cells[i, j] = new MinesweeperCell { Row = i, Column = j };
                 }
             }
             //GenerateMines();
@@ -45,18 +46,18 @@ namespace MineswepperMVC
 
         public MinesweeperCell GetCell(int row, int column)
         {
-            if (row < 0 || row >= rowCount || column < 0 || column >= colCount)
+            if (row < 0 || row >= _rowCount || column < 0 || column >= _colCount)
                 return null;
-            return cells[row, column];
+            return _cells[row, column];
         }
 
         public bool IsWin()
         {
-            for (int i = 0; i < rowCount; i++)
+            for (int i = 0; i < _rowCount; i++)
             {
-                for (int j = 0; j < colCount; j++)
+                for (int j = 0; j < _colCount; j++)
                 {
-                    if ((!cells[i, j].Mined && (cells[i, j].State != CellState.Opened)))//&& cells[i, j].State != CellState.Flagged
+                    if ((!_cells[i, j].Mined && (_cells[i, j].State != CellState.Opened)))//&& cells[i, j].State != CellState.Flagged
                         return false;
                 }
 
@@ -64,24 +65,24 @@ namespace MineswepperMVC
             return true;
         }
 
-        public bool IsGameOver() => gameOver;
+        public bool IsGameOver() => _gameOver;
 
 
 
         public void OpenCell(int row, int column)
         {
-            MinesweeperCell cell = cells[row, column];
+            MinesweeperCell cell = _cells[row, column];
             if (cell == null)
                 return;
             cell.Open();
             if (cell.Mined)
             {
-                gameOver = true;
+                _gameOver = true;
                 return;
             }
-            if (firstStep)
+            if (_firstStep)
             {
-                firstStep = false;
+                _firstStep = false;
                 GenerateMines();
             }
             cell.Counter = CountMinesAroundCell(row, column);
@@ -117,17 +118,17 @@ namespace MineswepperMVC
         private void GenerateMines()
         {
 
-            for (int i = 0; i < mineCount; i++)
+            for (int i = 0; i < _mineCount; i++)
             {
                 bool isOk = false;
 
                 while (!isOk)
                 {
-                    int r = random.Next(0, rowCount - 1);
-                    int c = random.Next(0, colCount - 1);
-                    if (cells[r, c].State != CellState.Opened && !cells[r, c].Mined)
+                    int r = _r.Next(0, _rowCount - 1);
+                    int c = _r.Next(0, _colCount - 1);
+                    if (_cells[r, c].State != CellState.Opened && !_cells[r, c].Mined)
                     {
-                        cells[r, c].Mined = true;
+                        _cells[r, c].Mined = true;
 
                         isOk = true;
                     }
@@ -138,8 +139,8 @@ namespace MineswepperMVC
 
         public void NextCellMark(int row, int column)
         {
-            if (cells[row, column] != null)
-                cells[row, column].NextMark();
+            if (_cells[row, column] != null)
+                _cells[row, column].NextMark();
         }
     }
 }

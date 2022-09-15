@@ -12,42 +12,42 @@ namespace MineswepperMVC
 {
     public partial class MinesweeperView : Form
     {
-        class ButtonCell : Button
+        private class ButtonCell : Button
         {
             public int Row { get; set; }
             public int Column { get; set; }
             public bool Block { get; set; } = false;
         }
 
-        MinesweeperModel model;
-        MinesweeperController controller;
+        private MinesweeperModel _model;
+        private MinesweeperController _controller;
 
-        ButtonCell[,] buttons;
+        private ButtonCell[,] _buttons;
 
         public MinesweeperView(MinesweeperModel model, MinesweeperController controller)
         {
             InitializeComponent();
 
-            this.model = model;
-            this.controller = controller;
+            _model = model;
+            _controller = controller;
             controller.View = this;
 
-            buttons = new ButtonCell[model.RowCount, model.ColumnCount];
-            for (int i = 0; i < buttons.GetLength(0); i++)
+            _buttons = new ButtonCell[model.RowCount, model.ColumnCount];
+            for (int i = 0; i < _buttons.GetLength(0); i++)
             {
-                for (int j = 0; j < buttons.GetLength(1); j++)
+                for (int j = 0; j < _buttons.GetLength(1); j++)
                 {
-                    buttons[i, j] = new ButtonCell
+                    _buttons[i, j] = new ButtonCell
                     {
                         Row = i,
                         Column = j
                     };
-                    buttons[i, j].Height = 40;
-                    buttons[i, j].Width = 40;
-                    buttons[i, j].Location = new Point(i * 40, j * 40);
+                    _buttons[i, j].Height = 40;
+                    _buttons[i, j].Width = 40;
+                    _buttons[i, j].Location = new Point(i * 40, j * 40);
 
-                    buttons[i, j].MouseDown += MinesweeperView_MouseClick;
-                    this.Controls.Add(buttons[i, j]);
+                    _buttons[i, j].MouseDown += MinesweeperView_MouseClick;
+                    Controls.Add(_buttons[i, j]);
                 }
             }
 
@@ -63,27 +63,27 @@ namespace MineswepperMVC
 
             if (e.Button == MouseButtons.Left && !btn.Block)
             {
-                controller.OnLeftClick(btn.Row, btn.Column);
+                _controller.OnLeftClick(btn.Row, btn.Column);
                 //ShowAllMines();
             }
             else
                  if (e.Button == MouseButtons.Right)
             {
-                controller.OnRightClick(btn.Row, btn.Column);
+                _controller.OnRightClick(btn.Row, btn.Column);
             }
         }
 
         //для отладки
-        void ShowAllMines()
+        private void ShowAllMines()
         {
-            for (int i = 0; i < model.RowCount; i++)
+            for (int i = 0; i < _model.RowCount; i++)
             {
-                for (int j = 0; j < model.ColumnCount; j++)
+                for (int j = 0; j < _model.ColumnCount; j++)
                 {
-                    MinesweeperCell c = model.GetCell(i, j);
+                    MinesweeperCell c = _model.GetCell(i, j);
                     if (c.Mined)
                     {
-                        buttons[i, j].BackColor = Color.Black;
+                        _buttons[i, j].BackColor = Color.Black;
                     }
                 }
             }
@@ -91,27 +91,27 @@ namespace MineswepperMVC
 
         internal void ClearBoard()
         {
-            for (int i = 0; i < model.RowCount; i++)
+            for (int i = 0; i < _model.RowCount; i++)
             {
-                for (int j = 0; j < model.ColumnCount; j++)
+                for (int j = 0; j < _model.ColumnCount; j++)
                 {
-                    buttons[i, j].BackColor = Button.DefaultBackColor;
-                    buttons[i, j].Text = "";
-                    buttons[i, j].Block = false;
+                    _buttons[i, j].BackColor = Button.DefaultBackColor;
+                    _buttons[i, j].Text = "";
+                    _buttons[i, j].Block = false;
                 }
             }
         }
         internal void SyncWithModel()
         {
-            for (int i = 0; i < model.RowCount; i++)
+            for (int i = 0; i < _model.RowCount; i++)
             {
-                for (int j = 0; j < model.ColumnCount; j++)
+                for (int j = 0; j < _model.ColumnCount; j++)
                 {
-                    MinesweeperCell c = model.GetCell(i, j);
+                    MinesweeperCell c = _model.GetCell(i, j);
                     if (c != null)
                     {
-                        Button btn = buttons[i, j];
-                        if (model.IsGameOver() && c.Mined)
+                        Button btn = _buttons[i, j];
+                        if (_model.IsGameOver() && c.Mined)
                         {
                             btn.BackColor = Color.Black;
                             btn.Text = "";
@@ -120,11 +120,11 @@ namespace MineswepperMVC
                         {
                             btn.Text = "";
                         }
-                        else
-                         if (c.State == CellState.Opened)
+                        else if (c.State == CellState.Opened)
                         {
                             btn.Text = "";
-                            btn.BackColor = Color.Aqua;
+                            btn.BackColor = Color.LightGray;
+                            btn.ForeColor = Color.Red;
                             if (c.Counter > 0)
                             {
                                 btn.Text = c.Counter.ToString();
@@ -135,14 +135,12 @@ namespace MineswepperMVC
                                 btn.BackColor = Color.Red;
                             }
                         }
-                        else
-                            if (c.State == CellState.Flagged)
+                        else if (c.State == CellState.Flagged)
                         {
                             btn.Text = "P";
 
                         }
-                        else
-                            if (c.State == CellState.Questioned)
+                        else if (c.State == CellState.Questioned)
                         {
                             btn.Text = "?";
                         }
@@ -165,7 +163,7 @@ namespace MineswepperMVC
         internal void BlockCell(int row, int column, bool v = true)
         {
 
-            ButtonCell btn = buttons[row, column];
+            ButtonCell btn = _buttons[row, column];
             if (btn == null)
                 return;
             if (v)
