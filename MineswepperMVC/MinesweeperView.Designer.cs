@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Menu = new System.Windows.Forms.MenuStrip();
             this.NewGameTSMI = new System.Windows.Forms.ToolStripMenuItem();
             this.сложностьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -35,7 +36,12 @@
             this.MediumModeTSMI = new System.Windows.Forms.ToolStripMenuItem();
             this.HardModeTSMI = new System.Windows.Forms.ToolStripMenuItem();
             this.CloseTSMI = new System.Windows.Forms.ToolStripMenuItem();
+            this.Status = new System.Windows.Forms.StatusStrip();
+            this.AmountMineSL = new System.Windows.Forms.ToolStripStatusLabel();
+            this.TimerSL = new System.Windows.Forms.ToolStripStatusLabel();
+            this.Timer = new System.Windows.Forms.Timer(this.components);
             this.Menu.SuspendLayout();
+            this.Status.SuspendLayout();
             this.SuspendLayout();
             // 
             // Menu
@@ -96,17 +102,47 @@
             this.CloseTSMI.Text = "Выход";
             this.CloseTSMI.Click += new System.EventHandler(this.CloseTSMI_Click);
             // 
+            // Status
+            // 
+            this.Status.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.Status.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AmountMineSL,
+            this.TimerSL});
+            this.Status.Location = new System.Drawing.Point(0, 428);
+            this.Status.Name = "Status";
+            this.Status.Size = new System.Drawing.Size(800, 22);
+            this.Status.TabIndex = 1;
+            this.Status.Text = "statusStrip1";
+            // 
+            // AmountMineSL
+            // 
+            this.AmountMineSL.Name = "AmountMineSL";
+            this.AmountMineSL.Size = new System.Drawing.Size(0, 16);
+            // 
+            // TimerSL
+            // 
+            this.TimerSL.Name = "TimerSL";
+            this.TimerSL.Size = new System.Drawing.Size(0, 16);
+            // 
+            // Timer
+            // 
+            this.Timer.Interval = 1000;
+            this.Timer.Tick += new System.EventHandler(this.Timer_Tick);
+            // 
             // MinesweeperView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.Status);
             this.Controls.Add(this.Menu);
             this.MainMenuStrip = this.Menu;
             this.Name = "MinesweeperView";
             this.Text = "MineswepperView";
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
+            this.Status.ResumeLayout(false);
+            this.Status.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -121,5 +157,9 @@
         private ToolStripMenuItem MediumModeTSMI;
         private ToolStripMenuItem HardModeTSMI;
         private ToolStripMenuItem CloseTSMI;
+        private StatusStrip Status;
+        private ToolStripStatusLabel AmountMineSL;
+        private ToolStripStatusLabel TimerSL;
+        private System.Windows.Forms.Timer Timer;
     }
 }

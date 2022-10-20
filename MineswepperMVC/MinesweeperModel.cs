@@ -20,7 +20,8 @@ namespace MineswepperMVC
 
         public int RowCount => _rowCount;
         public int ColumnCount => _colCount;
-
+        public int MineCount => _mineCount;
+        public bool FirstStep => _firstStep;
        
         public MinesweeperModel()
         {

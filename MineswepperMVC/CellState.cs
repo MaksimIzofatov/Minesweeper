@@ -10,7 +10,6 @@ namespace MineswepperMVC
     { 
         Closed, 
         Opened, 
-        Flagged, 
-        Questioned 
+        Flagged
     }
 }

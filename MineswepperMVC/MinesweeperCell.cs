@@ -33,15 +33,9 @@ namespace MineswepperMVC
 
                 case CellState.Flagged:
                     {
-                        State = CellState.Questioned;
-                        break;
-                    }
-                case CellState.Questioned:
-                    {
                         State = CellState.Closed;
                         break;
                     }
-
             }
         }
 
