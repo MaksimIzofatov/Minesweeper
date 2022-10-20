@@ -8,9 +8,9 @@ namespace MineswepperMVC
 {
     public class MinesweeperModel
     {
-        private int _rowCount = 10;
-        private int _colCount = 10;
-        private int _mineCount = 15;
+        private int _rowCount;
+        private int _colCount;
+        private int _mineCount;
 
         private MinesweeperCell[,] _cells;
         private Random _r = new Random();
@@ -24,8 +24,33 @@ namespace MineswepperMVC
        
         public MinesweeperModel()
         {
-            _cells = new MinesweeperCell[_rowCount, _colCount];
+            SetGameMode(GameMode.Easy);
             StartGame();
+        }
+
+        public void SetGameMode(GameMode gameMode)
+        {
+            switch (gameMode)
+            {
+                case GameMode.Easy:
+                    _rowCount = 9;
+                    _colCount = 9;
+                    _mineCount = 10;
+                    _cells = new MinesweeperCell[_rowCount, _colCount];
+                    break;
+                case GameMode.Medium:
+                    _rowCount = 16;
+                    _colCount = 16;
+                    _mineCount = 40;
+                    _cells = new MinesweeperCell[_rowCount, _colCount];
+                    break;
+                case GameMode.Hard:
+                    _rowCount = 22;
+                    _colCount = 22;
+                    _mineCount = 99;
+                    _cells = new MinesweeperCell[_rowCount, _colCount];
+                    break;
+            }
         }
 
         public void StartGame()
@@ -57,7 +82,7 @@ namespace MineswepperMVC
             {
                 for (int j = 0; j < _colCount; j++)
                 {
-                    if ((!_cells[i, j].Mined && (_cells[i, j].State != CellState.Opened)))//&& cells[i, j].State != CellState.Flagged
+                    if (!_cells[i, j].Mined && (_cells[i, j].State != CellState.Opened))//&& cells[i, j].State != CellState.Flagged
                         return false;
                 }
 

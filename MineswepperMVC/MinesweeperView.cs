@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,6 +13,7 @@ namespace MineswepperMVC
 {
     public partial class MinesweeperView : Form
     {
+        private int MARGIN = 30;
         private class ButtonCell : Button
         {
             public int Row { get; set; }
@@ -31,8 +33,18 @@ namespace MineswepperMVC
             _model = model;
             _controller = controller;
             controller.View = this;
+            
+            FillButtons();
 
-            _buttons = new ButtonCell[model.RowCount, model.ColumnCount];
+            //ShowAllMines();
+        }
+
+        private void FillButtons()
+        {
+            Controls.Clear();
+            Controls.Add(Menu);
+
+            _buttons = new ButtonCell[_model.RowCount, _model.ColumnCount];
             for (int i = 0; i < _buttons.GetLength(0); i++)
             {
                 for (int j = 0; j < _buttons.GetLength(1); j++)
@@ -42,19 +54,17 @@ namespace MineswepperMVC
                         Row = i,
                         Column = j
                     };
-                    _buttons[i, j].Height = 40;
-                    _buttons[i, j].Width = 40;
-                    _buttons[i, j].Location = new Point(i * 40, j * 40);
+                    _buttons[i, j].Height = 30;
+                    _buttons[i, j].Width = 30;
+                    _buttons[i, j].Location = new Point(i * 30 + MARGIN, j * 30 + MARGIN);
 
                     _buttons[i, j].MouseDown += MinesweeperView_MouseClick;
                     Controls.Add(_buttons[i, j]);
                 }
             }
-
-            //ShowAllMines();
+            Width = (_model.RowCount + 1) * 30 + MARGIN;
+            Height = (_model.ColumnCount + 2) * 30 + MARGIN;
         }
-
-
 
         private void MinesweeperView_MouseClick(object sender, MouseEventArgs e)
         {
@@ -66,8 +76,7 @@ namespace MineswepperMVC
                 _controller.OnLeftClick(btn.Row, btn.Column);
                 //ShowAllMines();
             }
-            else
-                 if (e.Button == MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right)
             {
                 _controller.OnRightClick(btn.Row, btn.Column);
             }
@@ -95,12 +104,13 @@ namespace MineswepperMVC
             {
                 for (int j = 0; j < _model.ColumnCount; j++)
                 {
-                    _buttons[i, j].BackColor = Button.DefaultBackColor;
+                    _buttons[i, j].BackColor = Color.White;
                     _buttons[i, j].Text = "";
                     _buttons[i, j].Block = false;
                 }
             }
         }
+
         internal void SyncWithModel()
         {
             for (int i = 0; i < _model.RowCount; i++)
@@ -147,18 +157,11 @@ namespace MineswepperMVC
                     }
                 }
             }
-
         }
 
-        internal void ShowWinMessage()
-        {
-            MessageBox.Show("Поздравляем!", "Вы победили!");
-        }
+        internal void ShowWinMessage() => MessageBox.Show("Поздравляем!", "Вы победили!");
 
-        internal void ShowGameOverMessage()
-        {
-            MessageBox.Show("Игра окончена!", "Вы проиграли!");
-        }
+        internal void ShowGameOverMessage() => MessageBox.Show("Игра окончена!", "Вы проиграли!");
 
         internal void BlockCell(int row, int column, bool v = true)
         {
@@ -171,6 +174,37 @@ namespace MineswepperMVC
             else
                 btn.Block = false;
 
+        }
+
+        private void CloseTSMI_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void NewGameTSMI_Click(object sender, EventArgs e)
+        {
+            _controller.StartNewGame();
+        }
+
+        private void EasyModeTSMI_Click(object sender, EventArgs e)
+        {
+            _model.SetGameMode(GameMode.Easy);
+            FillButtons();
+            _controller.StartNewGame();
+        }
+
+        private void MediumModeTSMI_Click(object sender, EventArgs e)
+        {
+            _model.SetGameMode(GameMode.Medium);
+            FillButtons();
+            _controller.StartNewGame();
+        }
+
+        private void HardModeTSMI_Click(object sender, EventArgs e)
+        {
+            _model.SetGameMode(GameMode.Hard);
+            FillButtons();
+            _controller.StartNewGame();
         }
     }
 }
